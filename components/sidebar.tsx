@@ -3,7 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Scale, FileText, Users, MessageSquare, LayoutDashboard } from "lucide-react";
+import { signOut } from "next-auth/react";
+import { Scale, FileText, Users, MessageSquare, LayoutDashboard, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { EscritorioConfig } from "@/lib/types";
 
@@ -20,7 +21,6 @@ export function Sidebar({ config }: { config: EscritorioConfig }) {
 
   return (
     <aside className="w-60 flex flex-col bg-navy text-white">
-      {/* Logo e nome do escritório */}
       <div className="flex flex-col items-center gap-3 px-4 py-6 border-b border-white/10">
         {config.logo ? (
           <Image
@@ -43,7 +43,6 @@ export function Sidebar({ config }: { config: EscritorioConfig }) {
         </div>
       </div>
 
-      {/* Navegação */}
       <nav className="flex-1 p-3 space-y-0.5">
         {navItems.map((item) => {
           const Icon = item.icon;
@@ -66,8 +65,14 @@ export function Sidebar({ config }: { config: EscritorioConfig }) {
         })}
       </nav>
 
-      <div className="p-4 border-t border-white/10">
-        <p className="text-xs text-white/30 text-center">Advocacia OS</p>
+      <div className="p-3 border-t border-white/10">
+        <button
+          onClick={() => signOut({ callbackUrl: "/login" })}
+          className="flex items-center gap-2.5 w-full px-3 py-2.5 rounded-md text-sm text-white/50 hover:text-white hover:bg-white/10 transition-colors"
+        >
+          <LogOut className="h-4 w-4" />
+          Sair
+        </button>
       </div>
     </aside>
   );
