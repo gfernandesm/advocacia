@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Paleta Alberto Fernandes — azul marinho + dourado */
+    --navy: 230 52% 22%;          /* #1B2456 */
+    --navy-light: 230 40% 28%;    /* sidebar hover */
+    --gold: 43 46% 61%;           /* #C9B370 */
+    --gold-dark: 43 50% 48%;      /* dourado mais escuro para contraste */
+
+    --background: 220 20% 97%;
+    --foreground: 230 40% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 230 40% 15%;
+    --primary: 43 46% 61%;
+    --primary-foreground: 230 52% 15%;
+    --secondary: 220 20% 93%;
+    --secondary-foreground: 230 40% 25%;
+    --muted: 220 20% 93%;
+    --muted-foreground: 220 15% 50%;
+    --accent: 43 46% 94%;
+    --accent-foreground: 43 50% 35%;
+    --border: 220 20% 88%;
+    --input: 220 20% 88%;
+    --ring: 43 46% 61%;
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
