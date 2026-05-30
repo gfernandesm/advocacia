@@ -12,7 +12,7 @@ export default async function ClientesPage({
 
   let query = supabase
     .from("clientes")
-    .select("id, nome, cpf, tipo, cidade, estado, telefone, hipossuficiente")
+    .select("*")
     .order("nome")
 
   if (q) {

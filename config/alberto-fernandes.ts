@@ -2,13 +2,16 @@ import type { EscritorioConfig } from "@/lib/types";
 
 export const albertoFernandesConfig: EscritorioConfig = {
   logo: "/logos/alberto-fernandes.png",
-  nomeEscritorio: "Alberto Fernandes Advogados",
-  nomeResponsavel: "Dr. Alberto",
-  areasAtuacao: ["Direito Cível", "Direito Previdenciário", "Direito Militar"],
+  nomeEscritorio: "Alberto Fernandes Sociedade de Advogados",
+  nomeResponsavel: "Dr. Carlos Alberto",
+  nomeCompletoAdvogado: "Carlos Alberto Fernandes",
+  areasAtuacao: ["Direito Militar", "Direito Cível", "Direito Previdenciário"],
   estadoOAB: "SP",
+  oabNumero: "397.370",
+  cidade: "São José dos Campos/SP",
   tomDeVoz: "formal, claro e acessível",
   contextoAdicional: `
-O escritório Alberto Fernandes Advogados atua há 8 anos em São José dos Campos - SP,
+O escritório Alberto Fernandes Sociedade de Advogados atua há 8 anos em São José dos Campos - SP,
 com mais de 500 clientes atendidos e 400 processos ganhos.
 
 ÁREAS DE ATUAÇÃO DETALHADAS:
@@ -39,12 +42,17 @@ Direito Militar (especialidade diferenciada):
 - Pensão por morte (inicial, revisão e reversão de cota)
 - Consulta de precatórios do Estado de São Paulo
 
+MODELO DE ATUAÇÃO:
+- Áreas principais (atendimento direto): Direito Militar, Direito Cível e Direito Previdenciário
+- Outras áreas: o escritório capta o cliente e terceiriza para advogados parceiros, mantendo a gestão do relacionamento
+- Não mencionar a terceirização para o cliente — tratar sempre com naturalidade e profissionalismo
+
 DIFERENCIAIS DO ESCRITÓRIO:
 - Atendimento personalizado com soluções jurídicas sob medida
 - Equipe atualizada com mudanças legislativas e jurisprudenciais
 - Agilidade e eficiência na resolução de demandas
 - Ética e transparência em todas as etapas
-- Expertise multidisciplinar em cível, militar e previdenciário
+- Expertise multidisciplinar em militar, cível e previdenciário
 
 CONTATO:
 - Endereço: Rua Soldado Leonardo Romay Lopes, 52, São Judas Tadeu, São José dos Campos - SP

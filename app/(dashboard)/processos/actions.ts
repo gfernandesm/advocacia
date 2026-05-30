@@ -47,6 +47,58 @@ export async function createProcesso(
   return {}
 }
 
+export async function updateProcesso(
+  id: string,
+  _prev: { error?: string } | null,
+  formData: FormData
+): Promise<{ error?: string }> {
+  const numero      = (formData.get("numero") as string)?.trim() || null
+  const tipo_acao   = formData.get("tipo_acao") as TipoAcao
+  const descricao   = (formData.get("descricao_acao") as string)?.trim() || null
+  const reu_nome    = (formData.get("reu_nome") as string)?.trim()
+  const reu_tipo    = formData.get("reu_tipo") as TipoReu
+  const vara        = (formData.get("vara") as string)?.trim() || null
+  const tribunal    = (formData.get("tribunal") as string)?.trim() || null
+  const comarca     = (formData.get("comarca") as string)?.trim() || null
+  const valor_str   = formData.get("valor_causa") as string
+  const valor_causa = valor_str ? parseFloat(valor_str.replace(/\./g, "").replace(",", ".")) : null
+  const observacoes = (formData.get("observacoes") as string)?.trim() || null
+
+  if (!reu_nome) return { error: "Nome do réu é obrigatório" }
+
+  const supabase = createServerClient()
+  const { error } = await supabase
+    .from("processos")
+    .update({ numero, tipo_acao, descricao_acao: descricao, reu_nome, reu_tipo, vara, tribunal, comarca, valor_causa, observacoes })
+    .eq("id", id)
+
+  if (error) return { error: "Erro ao salvar. Tente novamente." }
+  revalidatePath("/processos")
+  revalidatePath(`/processos/${id}`)
+  return {}
+}
+
+export async function deleteProcesso(id: string): Promise<{ error?: string }> {
+  const supabase = createServerClient()
+
+  const { count } = await supabase
+    .from("contratos")
+    .select("*", { count: "exact", head: true })
+    .eq("processo_id", id)
+
+  if (count && count > 0) {
+    return { error: `Processo tem ${count} contrato(s) vinculado(s). Exclua os contratos antes.` }
+  }
+
+  await supabase.from("eventos_processo").delete().eq("processo_id", id)
+  await supabase.from("documentos").delete().eq("processo_id", id)
+  const { error } = await supabase.from("processos").delete().eq("id", id)
+
+  if (error) return { error: "Erro ao excluir. Tente novamente." }
+  revalidatePath("/processos")
+  return {}
+}
+
 export async function updateFaseProcesso(
   processoId: string,
   novaFase: FaseProcesso
