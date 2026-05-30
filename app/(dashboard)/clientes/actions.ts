@@ -45,6 +45,7 @@ export async function createCliente(
     estado,
     cep,
     hipossuficiente,
+    observacoes: null,
   })
 
   if (error) {
