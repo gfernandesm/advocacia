@@ -4,21 +4,19 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
-import { Scale, FileText, Users, MessageSquare, LayoutDashboard, LogOut, BookUser, ClipboardList, FileOutput, ScrollText, TrendingUp } from "lucide-react";
+import { FileText, MessageSquare, LayoutDashboard, LogOut, BookUser, ClipboardList, FileOutput, ScrollText, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { EscritorioConfig } from "@/lib/types";
 
 const navItems = [
-  { href: "/dashboard",                label: "Início",            icon: LayoutDashboard },
-  { href: "/clientes",                 label: "Clientes",          icon: BookUser },
-  { href: "/processos",                label: "Processos",         icon: ClipboardList },
-  { href: "/documentos",               label: "Gerar Documento",   icon: FileOutput },
-  { href: "/contratos",                label: "Contratos",         icon: ScrollText },
-  { href: "/financeiro",               label: "Financeiro",        icon: TrendingUp },
-  { href: "/agentes/revisar-contrato", label: "Revisar Contrato",  icon: FileText },
-  { href: "/agentes/gerar-peticao",    label: "Gerar Petição",     icon: Scale },
-  { href: "/agentes/intake-cliente",   label: "Intake de Cliente", icon: Users },
-  { href: "/agentes/faq-juridico",     label: "FAQ Jurídico",      icon: MessageSquare },
+  { href: "/dashboard",                label: "Início",          icon: LayoutDashboard },
+  { href: "/clientes",                 label: "Clientes",        icon: BookUser },
+  { href: "/processos",                label: "Processos",       icon: ClipboardList },
+  { href: "/documentos",               label: "Gerar Documento", icon: FileOutput },
+  { href: "/contratos",                label: "Contratos",       icon: ScrollText },
+  { href: "/financeiro",               label: "Financeiro",      icon: TrendingUp },
+  { href: "/agentes/revisar-contrato", label: "Revisar Contrato",icon: FileText },
+  { href: "/agentes/faq-juridico",     label: "FAQ Jurídico",    icon: MessageSquare },
 ];
 
 export function Sidebar({ config }: { config: EscritorioConfig }) {
