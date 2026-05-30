@@ -58,6 +58,7 @@ export async function createContrato(
         numero:          i + 1,
         valor:           valorParcela,
         data_vencimento: venc.toISOString().split("T")[0],
+        data_pagamento:  null,
         status:          "pendente" as StatusParcela,
       }
     })
