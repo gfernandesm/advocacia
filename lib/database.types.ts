@@ -182,14 +182,36 @@ export type ContratoComParcelas = Contrato & {
 
 // ── INSERTS (sem campos gerados automaticamente) ──────────────
 
-export type ClienteInsert = Omit<Cliente, "id" | "created_at" | "updated_at">;
-export type ProcessoInsert = Omit<Processo, "id" | "created_at" | "updated_at">;
-export type ContratoInsert = Omit<Contrato, "id" | "created_at" | "updated_at">;
-export type ParcelaInsert = Omit<Parcela, "id" | "created_at">;
-export type DocumentoInsert = Omit<Documento, "id" | "created_at" | "updated_at">;
+// Campos nullable viram opcionais nos inserts — o banco aceita omissão.
+export type ClienteInsert = Omit<Cliente, "id" | "created_at" | "updated_at"> & {
+  rg?: string | null; estado_civil?: string | null; profissao?: string | null;
+  endereco?: string | null; bairro?: string | null; cidade?: string | null;
+  estado?: string | null; cep?: string | null; telefone?: string | null;
+  email?: string | null; observacoes?: string | null;
+};
+export type ProcessoInsert = Omit<Processo, "id" | "created_at" | "updated_at"> & {
+  numero?: string | null; descricao_acao?: string | null; vara?: string | null;
+  tribunal?: string | null; comarca?: string | null; valor_causa?: number | null;
+  observacoes?: string | null;
+};
+export type ContratoInsert = Omit<Contrato, "id" | "created_at" | "updated_at"> & {
+  valor_total?: number | null; num_parcelas?: number | null;
+  percentual_exito?: number | null; base_calculo_exito?: string | null;
+  data_assinatura?: string | null; link_documento?: string | null;
+  observacoes?: string | null;
+};
+export type ParcelaInsert = Omit<Parcela, "id" | "created_at"> & {
+  data_pagamento?: string | null;
+};
+export type DocumentoInsert = Omit<Documento, "id" | "created_at" | "updated_at"> & {
+  processo_id?: string | null; contrato_id?: string | null; cliente_id?: string | null;
+  conteudo_html?: string | null; arquivo_path?: string | null;
+  fase_vinculada?: FaseProcesso | null;
+};
 export type EventoProcessoInsert = Omit<EventoProcesso, "id" | "created_at">;
 
 // ── TIPO DO BANCO (para createClient<Database>) ───────────────
+// O Supabase JS exige Relationships, Views, Functions e CompositeTypes.
 
 export type Database = {
   public: {
@@ -198,33 +220,41 @@ export type Database = {
         Row: Cliente;
         Insert: ClienteInsert;
         Update: Partial<ClienteInsert>;
+        Relationships: [];
       };
       processos: {
         Row: Processo;
         Insert: ProcessoInsert;
         Update: Partial<ProcessoInsert>;
+        Relationships: [];
       };
       eventos_processo: {
         Row: EventoProcesso;
         Insert: EventoProcessoInsert;
-        Update: never;
+        Update: Partial<EventoProcessoInsert>;
+        Relationships: [];
       };
       contratos: {
         Row: Contrato;
         Insert: ContratoInsert;
         Update: Partial<ContratoInsert>;
+        Relationships: [];
       };
       parcelas: {
         Row: Parcela;
         Insert: ParcelaInsert;
         Update: Partial<ParcelaInsert>;
+        Relationships: [];
       };
       documentos: {
         Row: Documento;
         Insert: DocumentoInsert;
         Update: Partial<DocumentoInsert>;
+        Relationships: [];
       };
     };
+    Views: Record<string, never>;
+    Functions: Record<string, never>;
     Enums: {
       tipo_cliente: TipoCliente;
       tipo_acao: TipoAcao;
@@ -237,5 +267,6 @@ export type Database = {
       status_parcela: StatusParcela;
       tipo_documento: TipoDocumento;
     };
+    CompositeTypes: Record<string, never>;
   };
 };

@@ -1,13 +1,16 @@
 import { createServerClient } from "@/lib/supabase/server"
 import { ProcessoList } from "@/components/processos/processo-list"
+import { ProcessoKanban } from "@/components/processos/processo-kanban"
 import { NovoProcessoDialog } from "@/components/processos/novo-processo-dialog"
+import { ViewToggle } from "@/components/processos/view-toggle"
 
 export default async function ProcessosPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; fase?: string }>
+  searchParams: Promise<{ q?: string; fase?: string; view?: string }>
 }) {
-  const { q, fase } = await searchParams
+  const { q, fase, view } = await searchParams
+  const isKanban = view !== "table"
   const supabase = createServerClient()
 
   let query = supabase
@@ -41,14 +44,21 @@ export default async function ProcessosPage({
             {total} processo{total !== 1 ? "s" : ""} encontrado{total !== 1 ? "s" : ""}
           </p>
         </div>
-        <NovoProcessoDialog clientes={clientes ?? []} />
+        <div className="flex items-center gap-3">
+          <ViewToggle isKanban={isKanban} />
+          <NovoProcessoDialog clientes={clientes ?? []} />
+        </div>
       </div>
 
-      <ProcessoList
-        processos={(processos ?? []) as never}
-        searchQuery={q}
-        faseFilter={fase}
-      />
+      {isKanban ? (
+        <ProcessoKanban processos={(processos ?? []) as never} />
+      ) : (
+        <ProcessoList
+          processos={(processos ?? []) as never}
+          searchQuery={q}
+          faseFilter={fase}
+        />
+      )}
     </div>
   )
 }

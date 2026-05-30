@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache"
 import { createServerClient } from "@/lib/supabase/server"
-import type { TipoAcao, TipoReu } from "@/lib/database.types"
+import type { TipoAcao, TipoReu, FaseProcesso } from "@/lib/database.types"
 
 export async function createProcesso(
   _prev: { error?: string } | null,
@@ -36,11 +36,36 @@ export async function createProcesso(
     tribunal,
     comarca,
     valor_causa,
-    fase_atual: "inicial",
-    resultado:  "em_andamento",
+    fase_atual:  "inicial",
+    resultado:   "em_andamento",
+    observacoes: null,
   })
 
   if (error) return { error: "Erro ao salvar. Tente novamente." }
+
+  revalidatePath("/processos")
+  return {}
+}
+
+export async function updateFaseProcesso(
+  processoId: string,
+  novaFase: FaseProcesso
+): Promise<{ error?: string }> {
+  const supabase = createServerClient()
+
+  const { error } = await supabase
+    .from("processos")
+    .update({ fase_atual: novaFase })
+    .eq("id", processoId)
+
+  if (error) return { error: error.message }
+
+  await supabase.from("eventos_processo").insert({
+    processo_id: processoId,
+    fase: novaFase,
+    descricao: `Fase atualizada para "${novaFase}"`,
+    data_evento: new Date().toISOString().split("T")[0],
+  })
 
   revalidatePath("/processos")
   return {}
