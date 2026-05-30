@@ -64,13 +64,24 @@ export default async function ProcessoDetalhePage({
   const { id } = await params
   const supabase = createServerClient()
 
-  const { data: processo } = await supabase
+  type ProcessoDetalhe = {
+    id: string; numero: string | null; tipo_acao: string; descricao_acao: string | null
+    reu_nome: string; reu_tipo: string; vara: string | null; tribunal: string | null
+    comarca: string | null; fase_atual: string; valor_causa: number | null
+    resultado: string; observacoes: string | null; cliente_id: string
+    created_at: string; updated_at: string
+    clientes: { id: string; nome: string; cpf: string; profissao: string | null; telefone: string | null; email: string | null; tipo: string; hipossuficiente: boolean } | null
+  }
+
+  const { data: processoRaw } = await supabase
     .from("processos")
     .select(`*, clientes(id, nome, cpf, profissao, telefone, email, tipo, hipossuficiente)`)
     .eq("id", id)
     .single()
 
-  if (!processo) notFound()
+  if (!processoRaw) notFound()
+
+  const processo = processoRaw as unknown as ProcessoDetalhe
 
   const { data: eventos } = await supabase
     .from("eventos_processo")
@@ -89,10 +100,7 @@ export default async function ProcessoDetalhePage({
     .select("id, modelo, status, valor_total, percentual_exito, plataforma_assinatura")
     .eq("processo_id", id)
 
-  const cliente = processo.clientes as {
-    id: string; nome: string; cpf: string; profissao: string | null
-    telefone: string | null; email: string | null; tipo: string; hipossuficiente: boolean
-  } | null
+  const cliente = processo.clientes
 
   const formatarValor = (v: number | null) =>
     v ? v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) : "—"

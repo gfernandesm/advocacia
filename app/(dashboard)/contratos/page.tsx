@@ -23,10 +23,11 @@ export default async function ContratosPage() {
     .select(`id, descricao_acao, tipo_acao, reu_nome, cliente_id, clientes(id, nome)`)
     .order("created_at", { ascending: false })
 
+  type ContratoRow = { modelo: string; parcelas: { status: string; valor: number }[] }
   const total = contratos?.length ?? 0
-  const totalReceber = contratos?.reduce((acc, c) => {
+  const totalReceber = (contratos as unknown as ContratoRow[])?.reduce((acc, c) => {
     if (c.modelo === "parcelado_fixo") {
-      const pendentes = (c.parcelas as { status: string; valor: number }[])
+      const pendentes = c.parcelas
         ?.filter((p) => p.status === "pendente")
         .reduce((s, p) => s + p.valor, 0) ?? 0
       return acc + pendentes

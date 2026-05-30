@@ -33,18 +33,21 @@ export default async function FinanceiroPage() {
     `)
     .order("data_vencimento")
 
+  type ParcelaRow = {
+    id: string; numero: number; valor: number
+    data_vencimento: string; data_pagamento: string | null; status: string
+    contratos: { id: string; modelo: string; clientes: { nome: string } | null; processos: { descricao_acao: string | null; tipo_acao: string } | null } | null
+  }
+
+  const rows = (parcelas as unknown as ParcelaRow[]) ?? []
   const hoje = new Date().toISOString().split("T")[0]
 
-  const totalRecebido = parcelas?.filter((p) => p.status === "pago").reduce((s, p) => s + p.valor, 0) ?? 0
-  const totalPendente = parcelas?.filter((p) => p.status === "pendente").reduce((s, p) => s + p.valor, 0) ?? 0
-  const totalVencido  = parcelas?.filter((p) => p.status === "vencido" || (p.status === "pendente" && p.data_vencimento < hoje)).reduce((s, p) => s + p.valor, 0) ?? 0
+  const totalRecebido = rows.filter((p) => p.status === "pago").reduce((s, p) => s + p.valor, 0)
+  const totalPendente = rows.filter((p) => p.status === "pendente").reduce((s, p) => s + p.valor, 0)
+  const totalVencido  = rows.filter((p) => p.status === "vencido" || (p.status === "pendente" && p.data_vencimento < hoje)).reduce((s, p) => s + p.valor, 0)
 
-  const proximas = parcelas
-    ?.filter((p) => p.status === "pendente" && p.data_vencimento >= hoje)
-    .slice(0, 10) ?? []
-
-  const vencidas = parcelas
-    ?.filter((p) => p.status === "pendente" && p.data_vencimento < hoje) ?? []
+  const proximas = rows.filter((p) => p.status === "pendente" && p.data_vencimento >= hoje).slice(0, 10)
+  const vencidas  = rows.filter((p) => p.status === "pendente" && p.data_vencimento < hoje)
 
   const fmt = (v: number) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })
   const fmtData = (d: string) => new Date(d + "T00:00:00").toLocaleDateString("pt-BR")
@@ -93,7 +96,7 @@ export default async function FinanceiroPage() {
           ) : (
             <div className="divide-y divide-border">
               {proximas.map((p) => {
-                const contrato = p.contratos as { clientes: { nome: string } | null; processos: { descricao_acao: string | null; tipo_acao: string } | null } | null
+                const contrato = p.contratos
                 return (
                   <div key={p.id} className="flex items-center justify-between px-4 py-3">
                     <div>
@@ -123,7 +126,7 @@ export default async function FinanceiroPage() {
           ) : (
             <div className="divide-y divide-border">
               {vencidas.map((p) => {
-                const contrato = p.contratos as { clientes: { nome: string } | null } | null
+                const contrato = p.contratos
                 const diasAtraso = Math.floor((new Date().getTime() - new Date(p.data_vencimento).getTime()) / 86400000)
                 return (
                   <div key={p.id} className="flex items-center justify-between px-4 py-3">

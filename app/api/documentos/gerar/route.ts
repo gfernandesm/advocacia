@@ -132,15 +132,18 @@ export async function POST(req: NextRequest) {
     await supabase.from("documentos").insert({
       cliente_id: clienteId,
       processo_id: processoId ?? null,
+      contrato_id: null,
+      arquivo_path: null,
+      fase_vinculada: null,
       tipo: tipo as never,
-      titulo: `${tipo.replace(/_/g, " ")} — ${cliente.nome}`,
+      titulo: `${tituloDoc} — ${cliente.nome}`,
       conteudo_html: conteudo,
     })
 
     // Retorna o arquivo
     const nomeArquivo = `${tipo}-${cliente.nome.split(" ")[0].toLowerCase()}.docx`
 
-    return new NextResponse(buffer, {
+    return new NextResponse(new Uint8Array(buffer), {
       headers: {
         "Content-Type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         "Content-Disposition": `attachment; filename="${nomeArquivo}"`,

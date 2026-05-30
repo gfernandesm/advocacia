@@ -101,8 +101,9 @@ export async function atualizarStatusContrato(
   status: "rascunho" | "aguardando_assinatura" | "assinado" | "cancelado"
 ): Promise<{ error?: string }> {
   const supabase = createServerClient()
-  const update: Record<string, unknown> = { status }
-  if (status === "assinado") update.data_assinatura = new Date().toISOString().split("T")[0]
+  const update = status === "assinado"
+    ? { status, data_assinatura: new Date().toISOString().split("T")[0] }
+    : { status }
 
   const { error } = await supabase.from("contratos").update(update).eq("id", contratoId)
   if (error) return { error: error.message }
