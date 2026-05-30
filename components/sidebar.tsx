@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
-import { FileText, MessageSquare, LayoutDashboard, LogOut, BookUser, ClipboardList, FileOutput, ScrollText, TrendingUp } from "lucide-react";
+import { Scale, FileText, MessageSquare, LayoutDashboard, LogOut, BookUser, ClipboardList, FileOutput, ScrollText, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { EscritorioConfig } from "@/lib/types";
 
